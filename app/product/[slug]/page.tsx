@@ -26,8 +26,10 @@ async function getRelated(slug: string) {
   }
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const product = await getProduct(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params; // ✅ Await params
+  const product = await getProduct(slug);
+  // const product = await getProduct(params.slug);
   if (!product) return { title: "Product | The Love Box" };
   const description = product.description?.slice(0, 155) || `Shop ${product.name} at The Love Box, Lagos.`;
   return {
@@ -43,10 +45,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function ProductPage({ params }: { params: { slug: string } }) {
-  const product = await getProduct(params.slug);
+export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params; // ✅ Await params
+  const product = await getProduct(slug);
   if (!product) notFound();
-  const related = await getRelated(params.slug);
+  const related = await getRelated(slug);
 
   const whatsappMessage = `Hi The Love Box! I'd like to ask about "${product.name}" before I order.`;
   const primaryCategory = product.categories?.[0];
