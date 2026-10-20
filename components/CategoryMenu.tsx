@@ -17,9 +17,19 @@ export default function CategoryMenu({ mobile = false, onNavigate }: { mobile?: 
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  const { data: categories = [] } = useQuery<Category[]>({
+  // const { data: categories = [] } = useQuery<Category[]>({
+  //   queryKey: ["categories"],
+  //   queryFn: async () => (await api.get("/categories")).data,
+  //   staleTime: 5 * 60 * 1000,
+  // });
+   const { data: categories = [] } = useQuery<Category[]>({
     queryKey: ["categories"],
-    queryFn: async () => (await api.get("/categories")).data,
+    queryFn: async () => {
+      const res = await api.get("/categories");
+      // SAFE EXTRACTION: Check if res is an array, or if res.data is an array
+      const rawData = Array.isArray(res) ? res : res.data;
+      return Array.isArray(rawData) ? rawData : [];
+    },
     staleTime: 5 * 60 * 1000,
   });
 

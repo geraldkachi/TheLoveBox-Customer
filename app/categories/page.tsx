@@ -19,8 +19,8 @@ async function getCategories() {
 
 export default async function CategoriesPage() {
   const categories = await getCategories();
-  const occasions = categories.filter((c: any) => !c.parent && !c.isGiftType);
-  const giftTypes = categories.filter((c: any) => c.isGiftType);
+  const occasions = categories?.filter((c: any) => !c.parent && !c.isGiftType);
+  const giftTypes = categories?.filter((c: any) => c.isGiftType);
 
   return (
     <div className="max-w-6xl mx-auto px-5 sm:px-8 py-14">
